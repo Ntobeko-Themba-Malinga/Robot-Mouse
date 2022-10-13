@@ -4,34 +4,29 @@ from robot_mouse import robot_mouse
 
 class TestRobotMouse(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.grid = [
+            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
+            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
+            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+        ]
+
     def test_make_grid(self):
         grid = robot_mouse.make_grid(5)
         self.assertEqual(len(grid), 5)
 
     def test_get_cheese(self):
-        grid = [
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
-            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-        ]
-        cheese_list = robot_mouse.get_cheese(grid)
+        cheese_list = robot_mouse.get_cheese(self.grid)
         self.assertIsInstance(cheese_list, list)
         self.assertIsInstance(cheese_list[0], tuple)
         self.assertEqual(len(cheese_list), 5)
 
     def test_get_initial_mouse_position(self):
-        grid = [
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
-            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-            ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
-        ]
-        initial_mouse_position = robot_mouse.get_initial_mouse_position(grid)
+        initial_mouse_position = robot_mouse.get_initial_mouse_position(self.grid)
         self.assertIsInstance(initial_mouse_position, list)
         self.assertIsInstance(initial_mouse_position[0], list)
         self.assertEqual(len(initial_mouse_position), 1)
