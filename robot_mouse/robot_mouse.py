@@ -86,9 +86,9 @@ def get_initial_mouse_position():
     return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
 
 
-def change_mouse_position(grid, mouse_position):
+def get_new_mouse_position(grid, mouse_position):
+    old_mouse_position = [mouse_position[0].copy()]
     direction, steps = get_direction_and_steps()
-    grid[mouse_position[0][0]][mouse_position[0][1]] = '🧱'
     out_of_bound_message = "Mouse can't be out of bounds!"
 
     if direction == 'u':
@@ -113,9 +113,13 @@ def change_mouse_position(grid, mouse_position):
             mouse_position[0][1] += steps
         else:
             print(out_of_bound_message)
-    grid[mouse_position[0][0]][mouse_position[0][1]] = '🐁'
     time.sleep(1)
-    return mouse_position, direction
+    return old_mouse_position, mouse_position, direction
+
+
+def change_mouse_position(grid, old_mouse_position, new_mouse_position):
+    grid[old_mouse_position[0][0]][old_mouse_position[0][1]] = '🧱'
+    grid[new_mouse_position[0][0]][new_mouse_position[0][1]] = '🐁'
 
 
 def update_mouse_info(position, cheese, cheese_score, health, mines=None, reward=None):
@@ -141,12 +145,10 @@ if __name__ == '__main__':
     cheese_score = 0
 
     initialize_grid(grid, cheese, mouse_position)
-
-    #coordinates = grid_coordinates(grid)
-    # alway draw your list at the end
     
     while check_win_status(cheese):
         display_grid(grid, health, cheese_score)
-        mouse_position, direction = change_mouse_position(grid, mouse_position)
+        old_mouse_position, mouse_position, direction = get_new_mouse_position(grid, mouse_position)
+        change_mouse_position(grid, old_mouse_position, mouse_position)
         cheese_score, cheese = update_mouse_info(mouse_position, cheese, cheese_score, health, mines=None, reward=None)
         display_grid(grid, health, cheese_score)
