@@ -1,4 +1,5 @@
 import os
+import time
 from random import randint
 
 
@@ -39,7 +40,7 @@ def get_cheese(grid):
         for _ in grid:
             if coor not in cheese_list:
                 cheese_list.append(coor)
-    
+
     return cheese_list
 
 
@@ -56,7 +57,7 @@ def grid_coordinates(grid: list):
 
 
 def display_grid(grid: list, health=5, cheese_score=5):
-    os.system("clear")
+    os.system("cls")
     print("life: "+"💖"*health)
     print("cheese: "+"🧀"*cheese_score, '\n')
     for row in grid:
@@ -65,41 +66,56 @@ def display_grid(grid: list, health=5, cheese_score=5):
         print()
 
 
-def get_initial_mouse_position():
-    return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
-
-
-def change_mouse_position(grid, mouse_position):
-    grid[mouse_position[0][0]][mouse_position[0][1]] = '🧱'
+def get_direction_and_steps():
     direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
-
-    if direction == 'exit' or direction == 'quit':
-        quit()
+    while direction not in ['r', 'l', 'u', 'd']:
+        direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
+        if direction == 'exit' or direction == 'quit':
+            quit()
 
     steps = None
-
     while steps is None:
         try:
             steps = int(input("Enter number of steps: "))
         except Exception as e:
             pass
+    return direction, steps
+
+
+def get_initial_mouse_position():
+    return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
+
+
+def change_mouse_position(grid, mouse_position):
+    direction, steps = get_direction_and_steps()
+    grid[mouse_position[0][0]][mouse_position[0][1]] = '🧱'
+    out_of_bound_message = "Mouse can't be out of bounds!"
 
     if direction == 'u':
         if mouse_position[0][0] - steps > 0:
             mouse_position[0][0] -= steps
+        else:
+            print(out_of_bound_message)
 
     if direction == 'd':
         if mouse_position[0][0] + steps < len(grid) - 1:
             mouse_position[0][0] += steps
+        else:
+            print(out_of_bound_message)
     if direction == 'l':
         if mouse_position[0][1] - steps > 0:
             mouse_position[0][1] -= steps
+        else:
+            print(out_of_bound_message)
 
     if direction == 'r':
         if mouse_position[0][1] + steps < len(grid) - 1:
             mouse_position[0][1] += steps
+        else:
+            print(out_of_bound_message)
     grid[mouse_position[0][0]][mouse_position[0][1]] = '🐁'
-    return mouse_position
+    time.sleep(1)
+    return mouse_position, direction
 
 
 def update_mouse_info(position, cheese, cheese_score, health, mines=None, reward=None):
@@ -111,6 +127,7 @@ def update_mouse_info(position, cheese, cheese_score, health, mines=None, reward
 
 def check_win_status(cheese):
     if len(cheese) == 0:
+        print("Congratulations, you won!")
         return False
     return True
 
@@ -125,12 +142,11 @@ if __name__ == '__main__':
 
     initialize_grid(grid, cheese, mouse_position)
 
-    coordinates = grid_coordinates(grid)
+    #coordinates = grid_coordinates(grid)
     # alway draw your list at the end
     
     while check_win_status(cheese):
         display_grid(grid, health, cheese_score)
-        mouse_position = change_mouse_position(grid, mouse_position)
+        mouse_position, direction = change_mouse_position(grid, mouse_position)
         cheese_score, cheese = update_mouse_info(mouse_position, cheese, cheese_score, health, mines=None, reward=None)
-    display_grid(grid, health, cheese_score)
-    print("Congratulations, you won!")
+        display_grid(grid, health, cheese_score)
