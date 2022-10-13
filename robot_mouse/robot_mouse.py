@@ -48,14 +48,6 @@ def get_mines(grid):
     pass
 
 
-def grid_coordinates(grid: list):
-    coordinates = []
-    for h in range(len(grid)):
-        for w in range(len(grid)):
-            coordinates.append((h, w))
-    return coordinates
-
-
 def display_grid(grid: list, health=5, cheese_score=5):
     os.system("cls")
     print("life: "+"💖"*health)
@@ -122,10 +114,24 @@ def change_mouse_position(grid, old_mouse_position, new_mouse_position):
     grid[new_mouse_position[0][0]][new_mouse_position[0][1]] = '🐁'
 
 
-def update_mouse_info(position, cheese, cheese_score, health, mines=None, reward=None):
-    if tuple(position[0]) in cheese:
-        cheese_score += 1
-        cheese.remove(tuple(position[0]))
+def update_mouse_info(grid, old_mouse_position, mouse_position, direction, cheese, cheese_score, health, mines=None, reward=None):
+    while old_mouse_position != mouse_position:
+        prev_old_mouse_position = [old_mouse_position[0].copy()]
+        if direction == 'u':
+            old_mouse_position[0][0] -= 1
+        elif direction == 'd':
+            old_mouse_position[0][0] += 1
+        elif direction == 'l':
+            old_mouse_position[0][1] -= 1
+        elif direction == 'r':
+            old_mouse_position[0][1] += 1
+
+        if tuple(old_mouse_position[0]) in cheese:
+            cheese_score += 1
+            cheese.remove(tuple(old_mouse_position[0]))
+        change_mouse_position(grid, prev_old_mouse_position, old_mouse_position)
+        display_grid(grid, health, cheese_score)
+        time.sleep(0.3)
     return cheese_score, cheese
 
 
@@ -146,9 +152,17 @@ if __name__ == '__main__':
 
     initialize_grid(grid, cheese, mouse_position)
     
+    display_grid(grid, health, cheese_score)
     while check_win_status(cheese):
-        display_grid(grid, health, cheese_score)
         old_mouse_position, mouse_position, direction = get_new_mouse_position(grid, mouse_position)
-        change_mouse_position(grid, old_mouse_position, mouse_position)
-        cheese_score, cheese = update_mouse_info(mouse_position, cheese, cheese_score, health, mines=None, reward=None)
-        display_grid(grid, health, cheese_score)
+        cheese_score, cheese = update_mouse_info(
+            grid, 
+            old_mouse_position, 
+            mouse_position, 
+            direction, 
+            cheese, 
+            cheese_score, 
+            health, 
+            mines=None, 
+            reward=None
+        )
