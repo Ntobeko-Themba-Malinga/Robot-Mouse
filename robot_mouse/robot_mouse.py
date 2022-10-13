@@ -74,7 +74,7 @@ def get_direction_and_steps():
     return direction, steps
 
 
-def get_initial_mouse_position():
+def get_initial_mouse_position(grid):
     return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
 
 
@@ -146,7 +146,7 @@ if __name__ == '__main__':
     grid_size = get_grid_size()
     grid = make_grid(grid_size)
     cheese = get_cheese(grid)
-    mouse_position = get_initial_mouse_position()
+    mouse_position = get_initial_mouse_position(grid)
     health = 5
     cheese_score = 0
 
