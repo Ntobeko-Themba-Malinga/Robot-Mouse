@@ -50,7 +50,7 @@ def get_mines(grid):
 
 
 def display_grid(grid: list, health=5, cheese_score=5):
-    os.system("cls")
+    os.system("clear")
     print("life: "+"💖"*health)
     print("cheese: "+"🧀"*cheese_score, '\n')
     for row in grid:
