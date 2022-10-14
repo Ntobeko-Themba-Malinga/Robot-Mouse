@@ -38,7 +38,7 @@ def initialize_grid(grid: list, cheese_list, initial_mouse_position):
     """
     for h in range(len(grid)):
         for w in range(len(grid)):
-            if [h, w] in initial_mouse_position:
+            if [h, w] in initial_mouse_position and grid[h][w] != '🧀':
                 grid[h][w] = '🐁'
 
             if (h < 1) or (h >= len(grid) - 1):
