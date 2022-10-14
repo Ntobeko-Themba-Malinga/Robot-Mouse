@@ -4,6 +4,9 @@ from random import randint
 
 
 def get_grid_size() -> int:
+    """
+    Get input from user for size of the grid
+    """
     grid_size = input('Grid size?: ')
     
     while not grid_size.isdigit():
@@ -12,6 +15,13 @@ def get_grid_size() -> int:
 
 
 def make_grid(grid_size: int):
+    """
+    Creates nxn grid using grid_size and 🧱
+
+    :param grid_size: int, used to create square grid
+
+    :return: list, grid filled with 🧱
+    """
     grid = []
     for _ in range(grid_size):
         grid.append(["🧱" for _ in range(grid_size)])
@@ -19,6 +29,13 @@ def make_grid(grid_size: int):
 
 
 def initialize_grid(grid: list, cheese_list, initial_mouse_position):
+    """
+    Creates boundaries of the grid, fills in the 🧀, and spawns the 🐁
+
+    :param grid: list
+    :param cheese_list: list, tuple
+    :param initial_mouse_position: list, tuple 
+    """
     for h in range(len(grid)):
         for w in range(len(grid)):
             if [h, w] in initial_mouse_position:
@@ -30,10 +47,16 @@ def initialize_grid(grid: list, cheese_list, initial_mouse_position):
                 grid[h][w] = '🟥'
             if (h, w) in cheese_list and grid[h][w] != '🐁':
                 grid[h][w] = '🧀'
-    return grid
 
 
 def get_cheese(grid):
+    """
+    Creates 2 value coordinates of tuples and puts them inside a list
+
+    :param grid: list
+
+    :return: list, a list that contains 2 value tuples
+    """
     cheese_list = []
     while len(cheese_list) < 5:
         coor = (randint(1, len(grid)-2), randint(1, len(grid)-2))
@@ -46,6 +69,15 @@ def get_cheese(grid):
 
 
 def get_mines(grid, cheese_list):
+    """
+    Creates 2 value coordinates of tuples and puts them inside a list.
+    Makes sure that the coordinates created don't already exist in cheese_list.
+
+    :param grid: list
+    :param cheese_list: list
+
+    :return: list, a list that contains 2 value tuples
+    """
     mine_list = []
     while len(mine_list) < 5:
         coord = (randint(1, len(grid)-2), randint(1, len(grid)-2))
@@ -57,6 +89,13 @@ def get_mines(grid, cheese_list):
 
 
 def place_remove_mine(grid, mine_position, place=True):
+    """
+    Removes or places mines on the display.
+
+    :param grid: list, contains the grid being manipulated
+    :param mine_position: list, containes 2 value tuples that are mines coordinates
+    :param place: bool, determines whether a mine is placed or removed.
+    """
     if place:
         grid[mine_position[0][0]][mine_position[0][1]] = '💥'
     else:
@@ -64,6 +103,14 @@ def place_remove_mine(grid, mine_position, place=True):
 
 
 def display_grid(grid: list, health=5, cheese_score=5):
+    """
+    Creates the display and updates it.
+    Clears the console each time before displaying anything.
+
+    :param grid: list, grid used to display the boundaries
+    :param health: int, used to track and display the users health
+    :param cheese_score: int, used to track and display the users score
+    """
     os.system("clear")
     print("life: "+"💖"*health)
     print("cheese: "+"🧀"*cheese_score, '\n')
@@ -74,6 +121,11 @@ def display_grid(grid: list, health=5, cheese_score=5):
 
 
 def get_direction_and_steps():
+    """
+    Asks the user the direction they want to go to and the number of steps they want to take
+
+    :return: str, int: returns a string containing direction and integer containing number of steps
+    """
     direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
     while direction not in ['r', 'l', 'u', 'd']:
         direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
@@ -90,10 +142,24 @@ def get_direction_and_steps():
 
 
 def get_initial_mouse_position(grid):
+    """
+    Randomly generates the initial position of the mouse on the grid.
+
+    :param grid: list, used to control the range of random guesses
+
+    :return: list, contains a 2 value list for the initial mouse coordinates
+    """
     return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
 
 
 def get_new_mouse_position(grid, mouse_position):
+    """
+    Asks the user where they want to move the mouse, 
+    it also forces the user to stay within boundaries
+
+    :param grid: list, used to control the user from going beyond the boundaries
+    :param mouse_position, used to create new mouse position
+    """
     old_mouse_position = [mouse_position[0].copy()]
     direction, steps = get_direction_and_steps()
     out_of_bound_message = "Mouse can't be out of bounds!"
