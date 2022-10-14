@@ -48,3 +48,13 @@ class TestRobotMouse(unittest.TestCase):
                 ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
             ]
         )
+
+    def test_get_mines(self):
+        cheese_list = [(3, 3), (4, 4), (5, 5)]
+        mine_list = robot_mouse.get_mines(self.grid, cheese_list)
+        for mine in mine_list:
+            self.assertNotIn(mine, cheese_list)
+        self.assertIsInstance(mine_list, list)
+        self.assertIsInstance(mine_list[0], tuple)
+        self.assertEqual(len(mine_list), 5)
+    
