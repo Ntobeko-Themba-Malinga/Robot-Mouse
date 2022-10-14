@@ -3,13 +3,12 @@ from robot_mouse import robot_mouse
 
 
 class TestRobotMouse(unittest.TestCase):
-
     @classmethod
-    def setUpClass(cls):
-        cls.grid = [
+    def setUpClass(self):
+        self.grid = [
             ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
             ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
-            ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
+            ['🧱', "🧱", "🐁", '🧱', '🧱', '🧱'],
             ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
             ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
             ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
@@ -35,3 +34,17 @@ class TestRobotMouse(unittest.TestCase):
     def test_check_win_status(self):
         self.assertFalse(robot_mouse.check_win_status([]))
         self.assertTrue(robot_mouse.check_win_status([(2, 2)]))
+
+    def test_change_mouse_position(self):
+        robot_mouse.change_mouse_position(self.grid, [[2, 2]], [[3, 3]])
+        self.assertEqual(
+            self.grid,
+            [
+                ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+                ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
+                ['🧱', "🧱", "🧱", '🧱', '🧱', '🧱'],
+                ['🧱', '🧱', '🧱', '🐁', '🧱', '🧱'],
+                ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+                ['🧱', '🧱', '🧱', '🧱', '🧱', '🧱'],
+            ]
+        )

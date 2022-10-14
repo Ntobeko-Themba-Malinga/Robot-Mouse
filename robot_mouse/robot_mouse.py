@@ -30,6 +30,7 @@ def initialize_grid(grid: list, cheese_list, initial_mouse_position):
                 grid[h][w] = '🟥'
             if (h, w) in cheese_list and grid[h][w] != '🐁':
                 grid[h][w] = '🧀'
+    return grid
 
 
 def get_cheese(grid):
