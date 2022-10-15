@@ -191,11 +191,34 @@ def get_new_mouse_position(grid, mouse_position):
 
 
 def change_mouse_position(grid, old_mouse_position, new_mouse_position):
+    """
+    Changes mouse position from old position to new position.
+    Replaces old mouse position on the grid with 🧱, places 🐁 on the new mouse position on the grid.
+
+    :param grid: list, where 🧱, 🐁 are moved and placed
+    :param old_mouse_position: list, contains a 2 value list representing old mouse coordinates
+    :param new_mouse_position: list, contains a 2 value list representing new mouse coordinates
+    """
     grid[old_mouse_position[0][0]][old_mouse_position[0][1]] = '🧱'
     grid[new_mouse_position[0][0]][new_mouse_position[0][1]] = '🐁'
 
 
-def update_mouse_info(grid, old_mouse_position, mouse_position, direction, cheese, cheese_score, health, mines, reward=None):
+def update_mouse_info(grid, old_mouse_position, mouse_position, direction, cheese, cheese_score, health, mines):
+    """
+    Tracks the path the mouse took when moving and determines if it did or didn't hit any cheese or mines,
+    and if did hit a cheese or a mine it increases the score or decreases the mouse's health
+
+    :param grid: list, used as argument when calling change_mouse_position, and display grid function
+    :param old_mouse_position: list, contains a 2 value list representing old mouse coordinates
+    :param new_mouse_position: list, contains a 2 value list representing new mouse coordinates
+    :param direction: str, contains the direction the user choice to move
+    :param cheese: list, contains 2 value tuples representing all of the cheeses coordinates
+    :param cheese_score: int, used to track users score
+    :param health: int, used to track mouses health
+    :param mines: list, contains 2 value tuples representing all of the mines 
+    
+    :return: int, int, list
+    """
     while old_mouse_position != mouse_position:
         prev_old_mouse_position = [old_mouse_position[0].copy()]
         if direction == 'u':
@@ -228,6 +251,14 @@ def update_mouse_info(grid, old_mouse_position, mouse_position, direction, chees
 
 
 def check_win_status(cheese):
+    """
+    Checks if the user has won the game.
+
+    :param cheese: list, used to track if there are any cheese coordinates left
+
+    :return: bool, if there are no cheese coordinates left it returns False and a message congratulating the user for winning
+                 , otherwise it returns True
+    """
     if len(cheese) == 0:
         print("Congratulations, you won!")
         return False
@@ -235,6 +266,14 @@ def check_win_status(cheese):
 
 
 def check_lose_status(mines):
+    """
+    Checks if the user has lost the game.
+
+    :param mines: list, used to track if there are any mines coordinates left
+
+    :return: bool, if there are no mines coordinates left it returns False and a message telling the user that they lost
+                 , otherwise it returns True
+    """
     if len(mines) == 0:
         print("Sorry, you lost!")
         return False
@@ -263,6 +302,5 @@ if __name__ == '__main__':
             cheese, 
             cheese_score, 
             health, 
-            mines, 
-            reward=None
+            mines
         )
