@@ -1,5 +1,6 @@
 import os
 import time
+import pickle
 from random import randint
 
 
@@ -120,17 +121,20 @@ def display_grid(grid: list, health=5, cheese_score=5):
         print()
 
 
-def get_direction_and_steps():
+def get_direction_and_steps(grid, cheese, mines, mouse_position, health, cheese_score):
     """
     Asks the user the direction they want to go to and the number of steps they want to take
 
     :return: str, int: returns a string containing direction and integer containing number of steps
     """
-    direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
+    direction = ""
     while direction not in ['r', 'l', 'u', 'd']:
-        direction = input("Enter move direction right(R), left(L), Up(U), Down(D): ").lower()
-        if direction == 'exit' or direction == 'quit':
+        direction = input("Enter move direction right(R), left(L), Up(U), Down(D), Save(S), quit(Q): ").lower()
+        if direction == 'exit' or direction == 'q':
             quit()
+        
+        if direction == "s":
+            save(grid, cheese, mines, mouse_position, health, cheese_score)
 
     steps = None
     while steps is None:
@@ -152,7 +156,7 @@ def get_initial_mouse_position(grid):
     return [[randint(1, len(grid)-2), randint(1, len(grid)-2)]]
 
 
-def get_new_mouse_position(grid, mouse_position):
+def get_new_mouse_position(grid, cheese, mines, mouse_position, health, cheese_score):
     """
     Asks the user where they want to move the mouse, 
     it also forces the user to stay within boundaries
@@ -161,7 +165,7 @@ def get_new_mouse_position(grid, mouse_position):
     :param mouse_position, used to create new mouse position
     """
     old_mouse_position = [mouse_position[0].copy()]
-    direction, steps = get_direction_and_steps()
+    direction, steps = get_direction_and_steps(grid, cheese, mines, mouse_position, health, cheese_score)
     out_of_bound_message = "Mouse can't be out of bounds!"
 
     if direction == 'u':
@@ -280,20 +284,66 @@ def check_lose_status(mines):
     return True
 
 
+def save(grid, cheese, mines, mouse_position, health, cheese_score):
+    with open("game_state.rm", "wb") as f:
+        game_state = [
+            grid,
+            cheese,
+            mines,
+            mouse_position,
+            health,
+            cheese_score
+        ]
+        pickle.dump(game_state, f)
+    print("Game saved!")
+    quit()
+
+
+def load():
+    files = os.listdir()
+    for file in files:
+        if file[-2:] == "rm":
+            with open(file, "rb") as f:
+                game_state = pickle.load(f)
+                return game_state
+
+
+def load_saved_game():
+    user_response = input("Load saved game? (y/n): ").lower()
+    
+    if user_response == "n":
+        return False
+    else:
+        files = os.listdir()
+        for file in files:
+            if file[-2:] == "rm":
+                return True
+
+
 if __name__ == '__main__':
-    grid_size = get_grid_size()
-    grid = make_grid(grid_size)
-    cheese = get_cheese(grid)
-    mines = get_mines(grid, cheese)
-    mouse_position = get_initial_mouse_position(grid)
-    health = 5
-    cheese_score = 0
+    if load_saved_game():
+        grid, cheese, mines, mouse_position, health, cheese_score = load()
+    else:
+        grid_size = get_grid_size()
+        grid = make_grid(grid_size)
+        cheese = get_cheese(grid)
+        mines = get_mines(grid, cheese)
+        mouse_position = get_initial_mouse_position(grid)
+        health = 5
+        cheese_score = 0
 
     initialize_grid(grid, cheese, mouse_position)
     
     display_grid(grid, health, cheese_score)
     while check_win_status(cheese) and check_lose_status(mines):
-        old_mouse_position, mouse_position, direction = get_new_mouse_position(grid, mouse_position)
+        old_mouse_position, mouse_position, direction = get_new_mouse_position(
+            grid, 
+            cheese, 
+            mines, 
+            mouse_position, 
+            health, 
+            cheese_score
+        )
         cheese_score, health, mouse_position = update_mouse_info(
             grid, 
             old_mouse_position, 
