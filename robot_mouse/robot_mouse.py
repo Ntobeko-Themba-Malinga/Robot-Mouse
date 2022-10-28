@@ -135,6 +135,8 @@ def get_direction_and_steps(grid, cheese, mines, mouse_position, health, cheese_
         
         if direction == "s":
             save(grid, cheese, mines, mouse_position, health, cheese_score)
+            print("Game saved!")
+            quit()
 
     steps = None
     while steps is None:
@@ -295,8 +297,6 @@ def save(grid, cheese, mines, mouse_position, health, cheese_score):
             cheese_score
         ]
         pickle.dump(game_state, f)
-    print("Game saved!")
-    quit()
 
 
 def load():

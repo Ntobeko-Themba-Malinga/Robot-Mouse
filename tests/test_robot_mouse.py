@@ -1,3 +1,4 @@
+import os
 import unittest
 from robot_mouse import robot_mouse
 
@@ -58,3 +59,14 @@ class TestRobotMouse(unittest.TestCase):
         self.assertIsInstance(mine_list[0], tuple)
         self.assertEqual(len(mine_list), 5)
     
+
+    def test_save(self):
+        grid = []
+        cheese = [] 
+        mines = [] 
+        mouse_position = []
+        health = 5 
+        cheese_score = 0
+        robot_mouse.save(grid, cheese, mines, mouse_position, health, cheese_score)
+        files = os.listdir()
+        self.assertIn("game_state.rm", files)
