@@ -112,7 +112,7 @@ def display_grid(grid: list, health=5, cheese_score=5):
     :param health: int, used to track and display the users health
     :param cheese_score: int, used to track and display the users score
     """
-    os.system("clear")
+    os.system("cls")
     print("life: "+"💖"*health)
     print("cheese: "+"🧀"*cheese_score, '\n')
     for row in grid:
